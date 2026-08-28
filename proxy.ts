@@ -16,9 +16,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const isAuthenticated = await checkSession(
+  const session = await checkSession(
     request.headers.get("cookie") ?? "",
   );
+  const isAuthenticated = session.data.success;
 
   if (isPrivateRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
